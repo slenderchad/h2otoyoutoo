@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H2O To You Too - Smart Residential Water Distribution (h2otoyoutoo.in)</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="/static/img/droplet.svg">
+</head>
+<body>
+
+    <!-- Floating Ocean Bubbles Background -->
+    <div class="ocean-background" id="oceanBackground"></div>
+
+    <!-- Animated Water Wave Footer -->
+    <div class="wave-container">
+        <div class="wave"></div>
+        <div class="wave wave2"></div>
+    </div>
+
+    <!-- App Wrapper -->
+    <div class="app-wrapper">
+
+        <!-- Navigation Header -->
+        <header class="aquatic-nav">
+            <div class="brand-section" id="brandLogo">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                </div>
+                <div class="brand-titles">
+                    <span class="brand-name">H2O To You Too</span>
+                    <span class="domain-badge">
+                        <span class="domain-tag">h2otoyoutoo.in</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <!-- Active Logged In Pill -->
+                <div class="user-status-pill" id="navUserStatus" style="display: none;">
+                    <span id="navRoleBadge" class="role-badge"></span>
+                    <span id="navUsername" style="font-weight: 700; color: #ffffff;"></span>
+                    <button class="btn btn-secondary btn-sm" id="btnLogout" style="padding: 0.25rem 0.65rem; margin-left: 0.5rem;">
+                        Logout
+                    </button>
+                </div>
+
+                <!-- Unauthenticated Nav Area -->
+                <div id="navAuthButtons" style="display: flex; gap: 0.5rem;">
+                    <!-- Will toggle dynamically -->
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+
+            <!-- ============================================================
+                 VIEW 1: LOGIN PAGE
+                 ============================================================ -->
+            <div id="view-login" class="view-panel auth-container">
+                <div class="glass-card">
+                    <div class="auth-header">
+                        <div class="water-drop-hero">
+                            <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                        </div>
+                        <h2 class="auth-title">Welcome to H2O</h2>
+                        <p class="auth-subtitle">Login to access your water services on h2otoyoutoo.in</p>
+                    </div>
+
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label class="form-label" for="loginUsername">
+                                <span>Username</span>
+                                <span class="form-label-hint">flat-*, supply-*, admin-*</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <input type="text" id="loginUsername" class="form-input" placeholder="e.g. flat-101, supply-AquaFlow, admin-001" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="loginPassword">
+                                <span>Password</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password" required>
+                                <button type="button" class="toggle-password" data-target="loginPassword" aria-label="Toggle password visibility">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="btnSubmitLogin">
+                            <span>Sign In</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </button>
+
+                        <!-- "New User?" button -->
+                        <button type="button" class="btn btn-new-user" id="btnGoToRegister">
+                            <span>💧 New User? Register Here</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 VIEW 2: REGISTRATION PAGE
+                 ============================================================ -->
+            <div id="view-register" class="view-panel auth-container" style="display: none;">
+                <div class="glass-card">
+                    <div class="auth-header">
+                        <div class="water-drop-hero">
+                            <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                        </div>
+                        <h2 class="auth-title">Create Account</h2>
+                        <p class="auth-subtitle">Select your role and get your personalized water username</p>
+                    </div>
+
+                    <form id="registerForm">
+                        <!-- Step 1: Role Selector -->
+                        <div class="form-group">
+                            <label class="form-label">Select Your Role</label>
+                            <div class="role-grid">
+                                <label class="role-card active" data-role="resident">
+                                    <input type="radio" name="regRole" value="resident" checked>
+                                    <div class="role-icon">🏠</div>
+                                    <div class="role-name">Resident</div>
+                                    <div class="role-format-tag">flat-&lt;flat#&gt;</div>
+                                </label>
+
+                                <label class="role-card" data-role="supplier">
+                                    <input type="radio" name="regRole" value="supplier">
+                                    <div class="role-icon">🚚</div>
+                                    <div class="role-name">Supplier</div>
+                                    <div class="role-format-tag">supply-&lt;name&gt;</div>
+                                </label>
+
+                                <label class="role-card" data-role="admin">
+                                    <input type="radio" name="regRole" value="admin">
+                                    <div class="role-icon">🛡️</div>
+                                    <div class="role-name">Admin</div>
+                                    <div class="role-format-tag">admin-&lt;id&gt;</div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Role-Specific Identifier Input -->
+                        <div class="form-group">
+                            <label class="form-label" id="regIdentifierLabel" for="regIdentifier">Flat Number</label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                </svg>
+                                <input type="text" id="regIdentifier" class="form-input" placeholder="e.g. 101, 204, B-402" required>
+                            </div>
+                            <div class="form-label-hint" id="regIdentifierHint" style="margin-top: 0.35rem;">
+                                Format: flat-&lt;flatnumber&gt;
+                            </div>
+                        </div>
+
+                        <!-- Live Username Preview -->
+                        <div class="username-preview-box">
+                            <span class="preview-label">Your Generated Username:</span>
+                            <span class="preview-value" id="previewUsername">flat-[your-id]</span>
+                        </div>
+
+                        <!-- Step 3: Password -->
+                        <div class="form-group">
+                            <label class="form-label" for="regPassword">
+                                <span>Create Password</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                <input type="password" id="regPassword" class="form-input" placeholder="Enter your password" required>
+                                <button type="button" class="toggle-password" data-target="regPassword" aria-label="Toggle password visibility">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="btnSubmitRegister">
+                            <span>Register & Generate Credentials</span>
+                        </button>
+
+                        <button type="button" class="btn btn-secondary" id="btnBackToLogin" style="width: 100%; margin-top: 0.75rem;">
+                            Already have an account? Sign In
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 VIEW 3: RESIDENT / USER PAGE (flat-<flatnumber>)
+                 ============================================================ -->
+            <div id="view-resident" class="view-panel" style="display: none;">
+                <div class="dashboard-hero">
+                    <div class="dashboard-hero-text">
+                        <h1>🏠 Resident Portal &bull; Flat <span id="residentWelcomeFlat"></span></h1>
+                        <p>Request water delivery, check verification status, and track arrival timings.</p>
+                    </div>
+                </div>
+
+                <div class="resident-grid">
+                    <!-- Left Column: Water Request Form + Interactive Tank Visualizer -->
+                    <div class="glass-card">
+                        <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: #ffffff;">💧 Order Water</h3>
+
+                        <!-- Visual Water Tank -->
+                        <div class="tank-visualizer-card">
+                            <div class="water-tank">
+                                <div class="water-tank-cap"></div>
+                                <div class="water-fill" id="waterTankFill"></div>
+                            </div>
+                            <div class="tank-gauge" id="tankGaugeValue">20 L</div>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Current Selection</span>
+                        </div>
+
+                        <form id="waterRequestForm" style="margin-top: 1rem;">
+                            <!-- Quick Chips -->
+                            <label class="form-label">Quick Volume Presets</label>
+                            <div class="liter-chips">
+                                <button type="button" class="liter-chip" data-liters="10">10 L</button>
+                                <button type="button" class="liter-chip" data-liters="15">15 L</button>
+                                <button type="button" class="liter-chip active" data-liters="20">20 L</button>
+                                <button type="button" class="liter-chip" data-liters="35">35 L</button>
+                                <button type="button" class="liter-chip" data-liters="50">50 L</button>
+                                <button type="button" class="liter-chip" data-liters="100">100 L</button>
+                            </div>
+
+                            <!-- Slider & Input -->
+                            <div class="form-group">
+                                <label class="form-label" for="reqLiters">
+                                    <span>Liters Required</span>
+                                    <span class="form-label-hint">Custom quantity</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="reqLiters" class="form-input" min="1" max="500" value="20" required style="padding-left: 1rem;">
+                                </div>
+                                <input type="range" id="reqSlider" min="5" max="100" value="20" step="5" style="width: 100%; margin-top: 0.6rem; accent-color: var(--aqua-primary);">
+                            </div>
+
+                            <!-- Dynamic Quota Rule Banner -->
+                            <div id="quotaBanner" class="quota-banner quota-banner-normal">
+                                <div id="quotaBannerText">
+                                    <strong>✅ Standard Quota (&le; 20 Liters):</strong> Automatically verified! Your request will be directly queued for supplier delivery scheduling.
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="reqPurpose">Purpose / Usage Type</label>
+                                <div class="input-wrapper">
+                                    <select id="reqPurpose" class="form-input" style="padding-left: 1rem;">
+                                        <option value="Drinking & Cooking">Drinking & Cooking (Purified)</option>
+                                        <option value="Daily Dispenser Refill">Daily Dispenser Refill</option>
+                                        <option value="Family Event / Gathering">Family Event / Gathering</option>
+                                        <option value="Tank Maintenance Cleaning">Tank Maintenance Cleaning</option>
+                                        <option value="Emergency Water Shortage">Emergency Water Shortage</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" id="btnSubmitWaterReq">
+                                <span>Submit Water Request</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right Column: My Requests & Delivery Tracking -->
+                    <div class="glass-card">
+                        <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: #ffffff;">📋 My Water Requests</h3>
+                        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1rem;">
+                            Track your request status and the delivery timings confirmed by water suppliers.
+                        </p>
+
+                        <!-- Filter Tabs for Active vs Completed -->
+                        <div class="filter-tabs">
+                            <button type="button" class="filter-tab active" id="tabResActive" onclick="setResidentTab('active')">
+                                Active Requests (<span id="resActiveCount">0</span>)
+                            </button>
+                            <button type="button" class="filter-tab" id="tabResCompleted" onclick="setResidentTab('completed')">
+                                Completed Orders (<span id="resCompletedCount">0</span>)
+                            </button>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="aquatic-table">
+                                <thead>
+                                    <tr>
+                                        <th>Request ID</th>
+                                        <th>Volume</th>
+                                        <th>Purpose</th>
+                                        <th>Verification</th>
+                                        <th>Delivery Timing</th>
+                                        <th>Status</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="residentRequestsBody">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                            <div id="residentEmptyState" style="display: none; text-align: center; padding: 2.5rem; color: var(--text-muted);">
+                                💧 No water requests submitted yet. Use the form to place your first request!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 VIEW 4: SUPPLIER PAGE (supply-<suppliername>)
+                 ============================================================ -->
+            <div id="view-supplier" class="view-panel" style="display: none;">
+                <div class="dashboard-hero">
+                    <div class="dashboard-hero-text">
+                        <h1>🚚 Supplier Dispatch Portal &bull; <span id="supplierNameDisplay"></span></h1>
+                        <p>View approved residential water orders and set expected delivery arrival timings.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.8rem;">
+                        <div>
+                            <h3 style="font-size: 1.3rem; color: #ffffff;">Water Deliveries</h3>
+                            <p style="color: var(--text-muted); font-size: 0.88rem;">
+                                Enter timings by which water will reach each house so residents can be notified.
+                            </p>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" onclick="loadSupplierData()">
+                            🔄 Refresh Orders
+                        </button>
+                    </div>
+
+                    <!-- Filter Tabs for Active vs Completed -->
+                    <div class="filter-tabs">
+                        <button type="button" class="filter-tab active" id="tabSupActive" onclick="setSupplierTab('active')">
+                            Active Deliveries (<span id="supActiveCount">0</span>)
+                        </button>
+                        <button type="button" class="filter-tab" id="tabSupCompleted" onclick="setSupplierTab('completed')">
+                            Completed / Delivered (<span id="supCompletedCount">0</span>)
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="aquatic-table">
+                            <thead>
+                                <tr>
+                                    <th>Request ID</th>
+                                    <th>Resident Flat</th>
+                                    <th>Volume</th>
+                                    <th>Purpose</th>
+                                    <th>Delivery Timing (House Arrival)</th>
+                                    <th>Status Action</th>
+                                    <th>State</th>
+                                </tr>
+                            </thead>
+                            <tbody id="supplierRequestsBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                        <div id="supplierEmptyState" style="display: none; text-align: center; padding: 2.5rem; color: var(--text-muted);">
+                            🚚 No pending approved water deliveries at this moment.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 VIEW 5: ADMIN PAGE (admin-<adminid>)
+                 ============================================================ -->
+            <div id="view-admin" class="view-panel" style="display: none;">
+                <div class="dashboard-hero">
+                    <div class="dashboard-hero-text">
+                        <h1>🛡️ Society Water Administration &bull; <span id="adminIdDisplay"></span></h1>
+                        <p>Verify high-volume water orders (>20L) and monitor supplier delivery timings across all flats.</p>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="loadAdminData()">
+                        🔄 Refresh Dashboard
+                    </button>
+                </div>
+
+                <!-- Stats Metric Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">💧</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statTotalLiters">0 L</div>
+                            <div class="stat-label">Total Water Distributed</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statTotalRequests">0</div>
+                            <div class="stat-label">Total Water Orders</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card" style="border-color: rgba(245, 158, 11, 0.4);">
+                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4);">⚠️</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statPendingVerifications" style="color: #fbbf24;">0</div>
+                            <div class="stat-label">Orders &gt; 20L Needing Verification</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">🚚</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statActiveDeliveries">0</div>
+                            <div class="stat-label">Deliveries En Route / Scheduled</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Action Card: Water Verification for orders > 20L -->
+                <div class="glass-card" style="margin-bottom: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                        <div>
+                            <h3 style="font-size: 1.25rem; color: #ffffff;">
+                                ⚠️ High-Volume Water Verification Queue (&gt; 20 Liters)
+                            </h3>
+                            <p style="color: var(--text-muted); font-size: 0.88rem;">
+                                Per society water conservation rules, orders exceeding 20L require admin review before suppliers are dispatched.
+                            </p>
+                        </div>
+                        <span class="badge badge-pending" id="pendingVerificationCount">0 Action Needed</span>
+                    </div>
+
+                    <div id="adminVerificationContainer">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Admin Master Table: User Requests + Supplier Timings -->
+                <div class="glass-card">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.4rem; color: #ffffff;">
+                        📊 Master Society Requests &amp; Supplier Timings Ledger
+                    </h3>
+                    <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">
+                        Live oversight of all resident requests, verified quotas, and supplier arrival timings.
+                    </p>
+
+                    <div class="table-responsive">
+                        <table class="aquatic-table">
+                            <thead>
+                                <tr>
+                                    <th>Request ID</th>
+                                    <th>Flat Number</th>
+                                    <th>Volume</th>
+                                    <th>Purpose</th>
+                                    <th>Verification Status</th>
+                                    <th>Assigned Supplier</th>
+                                    <th>Supplier Delivery Timing</th>
+                                    <th>Fulfillment Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminMasterTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ====================================================================
+         KEY MODAL: REGISTRATION CREDENTIALS DISPLAY (Mandatory Requirement)
+         "then display their username and password till they press ok. 
+          then redirect to the main login page."
+         ==================================================================== -->
+    <div class="modal-backdrop" id="credentialModal">
+        <div class="modal-card">
+            <div class="modal-icon">💧</div>
+            <h3 class="modal-title">Registration Successful!</h3>
+            <p class="modal-desc">
+                Your water account has been generated. Please record your login credentials below:
+            </p>
+
+            <div class="credentials-container">
+                <div class="cred-row">
+                    <span class="cred-label">Account Role:</span>
+                    <span id="modalRoleBadge" class="role-badge"></span>
+                </div>
+                <div class="cred-row">
+                    <span class="cred-label">Your Username:</span>
+                    <div class="cred-value-wrap">
+                        <span class="cred-value" id="modalUsername">flat-101</span>
+                        <button type="button" class="copy-btn" id="btnCopyUsername">Copy</button>
+                    </div>
+                </div>
+                <div class="cred-row">
+                    <span class="cred-label">Your Password:</span>
+                    <div class="cred-value-wrap">
+                        <span class="cred-value" id="modalPassword">water123</span>
+                        <button type="button" class="copy-btn" id="btnCopyPassword">Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            <p style="font-size: 0.82rem; color: var(--aqua-light); margin-bottom: 1.5rem;">
+                ℹ️ These credentials will remain displayed until you press OK. You will then be taken to the login page.
+            </p>
+
+            <button type="button" class="btn btn-primary" id="btnModalOk" style="font-size: 1.05rem; padding: 0.95rem;">
+                <span>OK &bull; Proceed to Login</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- App JavaScript -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
